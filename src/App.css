@@ -9,17 +9,40 @@ hr {
   color: white;
 }
 
+h1 {
+  color: var(--theme3);
+}
+
 .bg-custom {
   background-image: linear-gradient(-45deg, var(--theme4), white);
 }
 
-.btn-custom {
+.btn-custom1 {
+  background-color: var(--theme2);
+  color: white;
+  transition: 0.3s;
+}
+.btn-custom1:hover {
+  color: white;
+  background-color: var(--theme3);
+}
+
+.btn-custom2 {
+  background-color: var(--theme3);
+  color: white;
+  transition: 0.3s;
+}
+.btn-custom2:hover {
+  color: white;
+  background-color: var(--theme2);
+}
+
+.btn-custom3 {
   background-color: var(--theme1);
   transition: 0.3s;
 }
-
-.btn-custom:hover {
-  transform: scale(1.2) rotate(3deg);
+.btn-custom3:hover {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .text-custom {

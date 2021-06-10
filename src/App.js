@@ -87,12 +87,12 @@ const App = () => {
 
   return (
     <div className="App bg-custom min-vh-100">
-      <h1 className="display-1 text-center border-bottom border-dark">
-        Hello Hard Fork
-      </h1>
+      <div className="border-bottom border-dark">
+        <h1 className="display-1 text-center ">Hello Hard Fork Dapp</h1>
+      </div>
       {web3State.isLogged ? (
         <div className="border-bottom border-dark">
-          <div className="container mb-3">
+          <div className="container my-3">
             <div className="row">
               <div className="col-lg-6  text-center text-lg-start">
                 <p className=" fs-4 p-0 my-auto">
@@ -123,11 +123,12 @@ const App = () => {
           </div>
         </div>
       ) : (
-        <div className="container">
-          <button className="btn btn-custom position-absolute top-0 end-0 mt-3 me-3">
-            Login
-          </button>
-        </div>
+        <button
+          onClick={login}
+          className="btn btn-custom3 position-absolute top-0 end-0 mt-5 me-3"
+        >
+          Login
+        </button>
       )}
       <div className="container">
         {web3State.isMetaMask ? (
@@ -163,13 +164,13 @@ const App = () => {
           <div className="d-flex">
             <button
               onClick={handleClickGetBalance}
-              className="btn btn-primary me-3"
+              className="btn btn-custom2 me-3"
             >
               Voir la balance
             </button>
             <button
               onClick={() => setEthBalance(web3State.balance)}
-              className="btn btn-primary me-3"
+              className="btn btn-custom2 me-3"
             >
               Voir ma balance
             </button>
@@ -202,7 +203,7 @@ const App = () => {
         <div className="d-flex">
           <button
             onClick={handleClickSendEther}
-            className="btn btn-success me-3 align-self-center"
+            className="btn btn-custom1 me-3 align-self-center"
           >
             Envoyer
           </button>
