@@ -1,48 +1,6 @@
-export const counterAddress = "0x331a85Fa63EB20377f689908AB383223e61E2087" // RINKEBY
+export const counterAddress = "0x126d26adbd2333B54C7eBcCa04F804afaE097472" // RINKEBY
 
 export const counterAbi = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "step_",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "coAccount",
-        type: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "addOwners",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "counter",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
   {
     inputs: [],
     name: "decrement",
@@ -58,19 +16,44 @@ export const counterAbi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "reset",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
-        internalType: "address",
-        name: "account",
-        type: "address",
+        internalType: "uint256",
+        name: "step_",
+        type: "uint256",
       },
     ],
-    name: "isCoOwners",
+    name: "setStep",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "step_",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "counter",
     outputs: [
       {
-        internalType: "bool",
+        internalType: "uint256",
         name: "",
-        type: "bool",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -96,23 +79,22 @@ export const counterAbi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "reset",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "nbOperation",
+    outputs: [
+      {
         internalType: "uint256",
-        name: "step_",
+        name: "",
         type: "uint256",
       },
     ],
-    name: "setStep",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {

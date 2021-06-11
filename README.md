@@ -14,31 +14,128 @@ yarn add ethers
 yarn add web3-hooks
 ```
 
-Utilisation de Web3 comme un context
+**Utilisation de Web3 comme un context :**
 
-      <p>Metamask installed: {web3State.isMetamask ? "yes" : "no"}</p>
-            <p>Metamask installed: {window.ethereum.isMetaMask ? "yes" : "no"}</p>
-      <p>Web3: {web3State.isWeb3 ? "injected" : "no-injected"}</p>
+```js
+import React from "react"
+import ReactDOM from "react-dom"
+import { Web3Provider } from "web3-hooks"
+import App from "./App"
+import reportWebVitals from "./reportWebVitals"
 
+ReactDOM.render(
+  <React.StrictMode>
+    <Web3Provider>
+      <App />
+    </Web3Provider>
+  </React.StrictMode>,
+  document.getElementById("root")
+)
+```
 
-        {!web3State.isLogged && (
-          <>
-            <button onClick={login} className="btn btn-info">
-              Login
-            </button>
-          </>
-        )}
+Puis on consomme le context dans les components :
 
+```js
+const [web3State, login] = useContext(Web3Context)
+```
 
-        <p>Network id: {web3State.chainId}</p>
-        <p>Network name: {web3State.networkName}</p>
-        <p>Account: {web3State.account}</p>
-        <p>Balance: {web3State.balance}</p>
+L'objet `web3State` contient plusieurs méthodes :
 
-        PRovider représente la connexion entre le front et la blockchain (voir ether.js) = 1 account et 1 réseau
+```js
+// MetaMask intallé ? (bool)
+web3State.isMetamask
 
-Le web3-hooks détecte les blocks quand ils sont miné
+// Web3 injecté ? (bool)
+web3State.isWeb3
 
-Provider != Signer
-Provider écoute la blockchain (les fonctions view, ...)  
-Signer écoute ce qui concerne l'account
+// Nom du réseau
+web3State.networkName
+
+// ID du réseau
+web3State.chainId
+
+// Adresse du compte connecté
+web3State.account
+
+// Balance du compte connecté (en ether)
+web3State.balance
+```
+
+La mise à jour des balances s'effectue automatiquement à chaque block minés (UseEffect écoutant la blockchain).  
+**Envoyer un montant prédéfinit d'Ethers :**
+
+```js
+await web3State.signer.sendTransaction({
+  to: address,
+  value: etherSend,
+})
+```
+
+On utilise `signer` car un transaction à besoin d'un compte signant avec sa clé privé. La valuer en Ether doit être en WEI.  
+Etant une promise, on l'utlise avec `await`, `async() => {}` et `try{} catch(e){}`
+
+## Utilisation d'un smart contract
+
+On commence par créer un fichier `js` ou `json` avec :
+
+- L'adresse du contrat
+- Le réseau sur lequel il est déployer (non obligatoire)
+- l'ABI du contrat
+
+On se sert ensuite de ces informations pour utiliser notre contrat.  
+**Création du context lié à notre contrat :**
+
+```js
+export const ContractContext = createContext(null)
+
+const Component = () => {
+  return (
+    <>
+      <CounterContext.Provider>
+        <Dapp />
+      </CounterContext.Provider>
+    </>
+  )
+}
+```
+
+Puis on utilise le hooks `useContract` :
+
+```js
+const contract = useContract(contractAddress, contractAbi)
+```
+
+Et on passe la variable de notre contrat dans le `Provider` :
+
+```html
+<CounterContext.Provider value="{contract}">
+  <Dapp />
+</CounterContext.Provider>
+```
+
+Et enfin on consume le context dans le component souhaité :
+
+```js
+import { ContractContext } from "../App"
+import { useContext } from "react"
+
+const Component = () => {
+  const contract = useContext(ContractContext)
+
+  // appelle des fonctions du contrat
+  const handleContractInteraction = async () => {
+    try {
+      await contract.interaction()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+```
+
+## Refactoring avec useReducer et des components
+
+Component `<MetaMaskUsage />`
+
+```js
+
+```
