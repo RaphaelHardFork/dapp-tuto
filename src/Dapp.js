@@ -53,7 +53,7 @@ const Dapp = () => {
       <div className="border-top border-dark mt-3">
         <div className="container">
           <h2 className="display-5">Utilisation d'un Smart Contract</h2>
-          <h3 className="">Counter</h3>
+          <h3 className="">Counter.sol</h3>
           {!(web3State.chainId === 4) ? (
             <p className="alert alert-warning">
               Counter s'utilise avec le réseau Rinkeby

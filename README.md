@@ -136,6 +136,12 @@ const Component = () => {
 
 Component `<MetaMaskUsage />`
 
-```js
+Contract in custom hook...
 
-```
+TODO:
+
+- nb d operation pour être owner
+- affichage de liste des owner ?
+- utilisation d'un autre smart contract sur un autre reseau
+- gestion des erreur (console)
+- capter les events emit

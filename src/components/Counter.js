@@ -3,102 +3,178 @@ import { useCounter } from "../contexts/CounterContext"
 
 const Counter = () => {
   const [counter, counterState, counterDispatch] = useCounter()
+  const {
+    count,
+    step,
+    counterStatus,
+    ownerList,
+    counterStatusStyle,
+    isOwner,
+    nbOperation,
+  } = counterState
 
-  const [count, setCount] = useState(0)
-  const [counterStatus, setCounterStatus] = useState()
+  const [number, setNumber] = useState(0)
 
-  const handleGetCount = async () => {
+  const handleUpdateCount = async () => {
     try {
-      const count = await counter.counter()
-      setCount(count.toString())
-      setCounterStatus("")
+      const updatedCount = await counter.counter()
+      const updatedStep = await counter.step()
+      counterDispatch({
+        type: "UPDATE",
+        count: updatedCount.toString(),
+        step: updatedStep.toString(),
+      })
     } catch (e) {
+      counterDispatch({ type: "UPDATE_FAILURE", payload: e })
       console.log(e)
     }
   }
 
-  const handleIncrementCount = async () => {
-    setCounterStatus("waiting for confirmation")
+  const handleChangeCount = async (nb) => {
+    console.log(counterStatusStyle)
+    counterDispatch({ type: "COUNT_WAITING" })
     try {
-      let tx = await counter.increment()
-      setCounterStatus("Pending")
-      await tx.wait()
-      setCount((await counter.counter()).toString())
-      setCounterStatus("Success")
-    } catch (e) {
-      console.log(e)
-      if (e.code === 4001) {
-        setCounterStatus("Transaction rejected")
-      } else if (e.code === "INSUFFICIENT_FUNDS") {
-        setCounterStatus("Insufficient Funds")
-      } else {
-        setCounterStatus("Failed")
-        console.log(e)
+      let tx
+      counterDispatch({ type: "COUNT_PENDING" })
+      switch (nb) {
+        case 1:
+          tx = await counter.increment()
+          break
+        case 2:
+          tx = await counter.decrement()
+          break
+        case 3:
+          tx = await counter.reset()
+          break
+        default:
+          tx = 0
       }
-    }
-  }
-
-  const handleDecrementCount = async () => {
-    setCounterStatus("Waiting for confirmation")
-    try {
-      let tx = await counter.decrement()
-      setCounterStatus("Pending")
       await tx.wait()
-      setCount((await counter.counter()).toString())
-      setCounterStatus("Success")
+      let updatedCount = await counter.counter()
+      counterDispatch({
+        type: "COUNT_SUCCESS",
+        payload: updatedCount.toString(),
+      })
     } catch (e) {
       console.log(e)
-      if (e.code === 4001) {
-        setCounterStatus("Transaction rejected")
-      } else if (e.code === "INSUFFICIENT_FUNDS") {
-        setCounterStatus("Insufficient Funds")
-      } else {
-        setCounterStatus("Failed")
-        console.log(e)
-      }
+      counterDispatch({ type: "COUNT_FAILURE", payload: e })
     }
   }
 
-  const counterStatusStyle = (CountStat) => {
-    switch (CountStat) {
-      case "":
-        return ""
-      case "Waiting for confirmation":
-        return "alert alert-warning"
-      case "Pending":
-        return "alert alert-warning"
-      case "Success":
-        return "alert alert-success"
-      case "Failed":
-        return "alert alert-danger"
-      case "Transaction rejected":
-        return "alert alert-danger"
-      case "Insufficient Funds":
-        return "alert alert-danger"
-      default:
-        return "alert alert-dark"
+  const handleCheckAddress = async () => {
+    console.log(isOwner)
+    try {
+      let check = await counter.isOwners(ownerList)
+      let remainingOp = await counter.nbOperation(ownerList)
+      counterDispatch({
+        type: "IS_OWNER",
+        onList: check,
+        remainingOp: remainingOp.toString(),
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleChangeStep = async () => {
+    counterDispatch({ type: "COUNT_WAITING" })
+    try {
+      counterDispatch({ type: "COUNT_PENDING" })
+      let tx = await counter.setStep(number)
+      const updatedCount = await counter.counter()
+      const updatedStep = await counter.step()
+      await tx.wait()
+      counterDispatch({
+        type: "COUNT_SUCCESS",
+        payload: updatedCount.toString(),
+      })
+    } catch (e) {
+      console.log(e)
+      counterDispatch({ type: "COUNT_FAILURE", payload: e })
     }
   }
 
   return (
     <>
       <div className="d-flex mb-3">
-        <p className="text-muted my-auto me-3">Count: {count} </p>
+        <p className="text-muted my-auto me-3">
+          Count: {count} Step: {step}{" "}
+        </p>
+
         {counterStatus && (
-          <div className={`my-auto ${counterStatusStyle(counterStatus)}`}>
-            {counterStatus}
-          </div>
+          <div className={`my-auto ${counterStatusStyle}`}>{counterStatus}</div>
         )}
       </div>
-      <button onClick={handleGetCount} className="btn btn-custom1 me-3">
-        Avoir le <i>count</i>
-      </button>
-      <button onClick={handleIncrementCount} className="btn btn-custom1 me-3">
-        <b>+</b>
-      </button>
-      <button onClick={handleDecrementCount} className="btn btn-custom1 me-3">
-        <b>-</b>
-      </button>
+      <div className="d-flex mb-3">
+        <button onClick={handleUpdateCount} className="btn btn-custom1 me-3">
+          Rafraîchir
+        </button>
+        <button
+          onClick={() => handleChangeCount(1)}
+          className="btn btn-custom1 me-3"
+        >
+          <b>+</b>
+        </button>
+        <button
+          onClick={() => handleChangeCount(3)}
+          className="btn btn-custom2 me-3"
+        >
+          <b>Reset</b>
+        </button>
+        <button
+          onClick={() => handleChangeCount(2)}
+          className="btn btn-custom1 me-3"
+        >
+          <b>-</b>
+        </button>
+        <div className="input-group w-25">
+          <button
+            onClick={handleChangeStep}
+            id="step"
+            className="btn btn-custom2"
+          >
+            Changez le step
+          </button>
+          <input
+            value={number}
+            aria-describedby="step"
+            aria-label="Change the step"
+            type="number"
+            className="form-control "
+            onChange={(event) => setNumber(event.target.value)}
+          />
+        </div>
+      </div>
+      <div className="">
+        <label htmlFor="is-owner" className="form-label">
+          Tapez votre adresse pour voir si vous êtes sur la liste :
+        </label>
+        <div className="d-flex">
+          <input
+            placeholder="0x0000...000"
+            id="is-owner"
+            type="text"
+            className="form-control w-50 me-3"
+            onChange={(event) =>
+              counterDispatch({
+                type: "CHANGE_ADDRESS",
+                payload: event.target.value,
+              })
+            }
+          />
+          <button onClick={handleCheckAddress} className="btn btn-custom3">
+            Check
+          </button>
+        </div>
+        {isOwner ? (
+          <p>Vous êtes sur la liste, vous pouvez utiliser "Reset"</p>
+        ) : (
+          <p>
+            Vous n'êtes pas sur la liste (il vous reste {10 - nbOperation}{" "}
+            opération pour y être).
+          </p>
+        )}
+      </div>
     </>
   )
 }

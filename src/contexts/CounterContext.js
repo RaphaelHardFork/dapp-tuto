@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react"
+import { createContext, useContext, useEffect, useReducer } from "react"
 import { useContract } from "web3-hooks"
 import { counterAddress, counterAbi } from "../contracts/Counter"
 import { counterReducer } from "../reducers/counterReducer"
@@ -22,8 +22,16 @@ export const useCounter = () => {
     count: 0,
     step: 0,
     counterStatus: "",
-    ownerList: [],
+    ownerList: "",
+    isOwner: false,
+    counterStatusStyle: "alert alert-light",
+    errorMessage: "",
+    nbOperation: 0,
   })
+
+  useEffect(() => {
+    dispatch({ type: "CHANGE_TX_STATUS" })
+  }, [state.counterStatus])
 
   const context = useContext(CounterContext)
   if (context === undefined) {
