@@ -2,17 +2,9 @@ import { ethers } from "ethers"
 import { useContext } from "react"
 import { Web3Context } from "web3-hooks"
 
-const MetaMaskUsage = ({ state, dispatch }) => {
+const MetaMaskUsage = ({ state, dispatch, isConnected }) => {
   const [web3State] = useContext(Web3Context)
   const { ethBalance, address, amount, txStatus, txStatusStyle } = state
-
-  const isConnected = (account) => {
-    if (account === ethers.constants.AddressZero) {
-      return false
-    } else {
-      return true
-    }
-  }
 
   const handleClickGetBalance = async () => {
     try {
