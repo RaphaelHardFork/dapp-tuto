@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { useCounter } from "../contexts/CounterContext"
+import { useSeveralContracts } from "../hooks/useSeveralContracts"
 
 const Counter = () => {
-  const [counter, counterState, counterDispatch] = useCounter()
+  const [counter, counterState, counterDispatch] = useSeveralContracts()
   const {
     count,
     step,

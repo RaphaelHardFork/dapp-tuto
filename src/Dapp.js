@@ -4,14 +4,14 @@ import { metaMaskReducer } from "./reducers/metaMaskReducer"
 import Counter from "./components/Counter"
 import MetaMaskUsage from "./components/MetaMaskUsage"
 import Calculator from "./components//Calculator"
+import Calculette from "./components/Calculette"
 import Header from "./components/Header"
 import SuperbToken from "./components/SuperbToken"
-import { useCounter } from "./contexts/CounterContext"
-import TokenContextProvider from "./contexts/TokenContext"
+import { useSeveralContracts } from "./hooks/useSeveralContracts"
 
 const Dapp = () => {
   const [web3State] = useContext(Web3Context)
-  const counter = useCounter()
+  const counter = useSeveralContracts()
 
   const [state, dispatch] = useReducer(metaMaskReducer, {
     ethBalance: 0,
@@ -73,8 +73,8 @@ const Dapp = () => {
             <SuperbToken />
           </div>
           <div className="mb-3">
-            <h3>Calculator.sol</h3>
-            <Calculator />
+            <h3>Calculette.sol</h3>
+            <Calculette />
           </div>
         </div>
       </div>
