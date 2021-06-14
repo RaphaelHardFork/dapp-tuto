@@ -3,8 +3,11 @@ import { Web3Context } from "web3-hooks"
 import { metaMaskReducer } from "./reducers/metaMaskReducer"
 import Counter from "./components/Counter"
 import MetaMaskUsage from "./components/MetaMaskUsage"
+import Calculator from "./components//Calculator"
 import Header from "./components/Header"
+import SuperbToken from "./components/SuperbToken"
 import { useCounter } from "./contexts/CounterContext"
+import TokenContextProvider from "./contexts/TokenContext"
 
 const Dapp = () => {
   const [web3State] = useContext(Web3Context)
@@ -53,16 +56,26 @@ const Dapp = () => {
       <div className="border-top border-dark mt-3">
         <div className="container">
           <h2 className="display-5">Utilisation d'un Smart Contract</h2>
-          <h3 className="">Counter.sol</h3>
-          {!(web3State.chainId === 4) ? (
-            <p className="alert alert-warning">
-              Counter s'utilise avec le réseau Rinkeby
-            </p>
-          ) : counter ? (
-            <Counter />
-          ) : (
-            <p className="alert">Le contrat n'est pas initialiser</p>
-          )}
+          <div className="mb-3">
+            <h3 className="">Counter.sol</h3>
+            {!(web3State.chainId === 4) ? (
+              <p className="alert alert-warning">
+                Counter s'utilise avec le réseau Rinkeby
+              </p>
+            ) : counter ? (
+              <Counter />
+            ) : (
+              <p className="alert">Le contrat n'est pas initialiser</p>
+            )}
+          </div>
+          <div className="mb-3">
+            <h3>SuperbToken.sol</h3>
+            <SuperbToken />
+          </div>
+          <div className="mb-3">
+            <h3>Calculator.sol</h3>
+            <Calculator />
+          </div>
         </div>
       </div>
 

@@ -17,6 +17,7 @@ const CounterContextProvider = ({ children }) => {
   )
 }
 
+// hooks
 export const useCounter = () => {
   const [state, dispatch] = useReducer(counterReducer, {
     count: 0,

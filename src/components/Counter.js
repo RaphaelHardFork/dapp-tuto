@@ -82,7 +82,6 @@ const Counter = () => {
       counterDispatch({ type: "COUNT_PENDING" })
       let tx = await counter.setStep(number)
       const updatedCount = await counter.counter()
-      const updatedStep = await counter.step()
       await tx.wait()
       counterDispatch({
         type: "COUNT_SUCCESS",
