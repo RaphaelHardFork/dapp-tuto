@@ -19,6 +19,7 @@ export const calculetteReducer = (state, action) => {
       return {
         ...state,
         creditBalance: action.payload,
+        buyStatus: "",
       }
     case "IS_APPROVED":
       let approvedCheck
@@ -30,6 +31,26 @@ export const calculetteReducer = (state, action) => {
       return {
         ...state,
         approved: approvedCheck,
+      }
+    case "BUY_WAINTING":
+      return {
+        ...state,
+        buyStatus: "Waiting for confirmation",
+      }
+    case "BUY_PENDING":
+      return {
+        ...state,
+        buyStatus: "Pending",
+      }
+    case "BUY_SUCCESS":
+      return {
+        ...state,
+        buyStatus: "Success",
+      }
+    case "BUY_FAILURE":
+      return {
+        ...state,
+        buyStatus: `Failed with ${action.payload.message}`,
       }
     default:
       throw new Error(

@@ -6,6 +6,14 @@ const MetaMaskUsage = ({ state, dispatch }) => {
   const [web3State] = useContext(Web3Context)
   const { ethBalance, address, amount, txStatus, txStatusStyle } = state
 
+  const isConnected = (account) => {
+    if (account === ethers.constants.AddressZero) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   const handleClickGetBalance = async () => {
     try {
       let balance = await web3State.provider.getBalance(address)
@@ -19,21 +27,20 @@ const MetaMaskUsage = ({ state, dispatch }) => {
   }
 
   const handleClickSendEther = async () => {
+    //debug
+    console.log(web3State.account)
+
     let etherSend = ethers.utils.parseEther(amount.toString())
     dispatch({ type: "SEND_WAITING" })
-    //setTxStatus("Waiting for confirmation")
     try {
       let tx = await web3State.signer.sendTransaction({
         to: address,
         value: etherSend,
       })
       dispatch({ type: "SEND_PENDING" })
-      //setTxStatus("Pending")
       await tx.wait()
       dispatch({ type: "SEND_SUCCESS" })
-      //setTxStatus("Success")
     } catch (error) {
-      console.log(error.code)
       dispatch({ type: "SEND_FAILURE", payload: error })
     }
   }
@@ -49,7 +56,12 @@ const MetaMaskUsage = ({ state, dispatch }) => {
           id="balance-of"
           type="text"
           className="form-control w-50"
-          placeholder="0x000...000"
+          disabled={!isConnected(web3State.account)}
+          placeholder={
+            isConnected(web3State.account)
+              ? "0x000...000"
+              : "Connectez votre métamask"
+          }
           onChange={(event) =>
             dispatch({ type: "CHANGE_ADDRESS", payload: event.target.value })
           }
@@ -58,12 +70,14 @@ const MetaMaskUsage = ({ state, dispatch }) => {
         <div className="form-text mb-3">{}</div>
         <div className="d-flex">
           <button
+            disabled={!isConnected(web3State.account)}
             onClick={handleClickGetBalance}
             className="btn btn-custom2 me-3"
           >
             Voir la balance
           </button>
           <button
+            disabled={!isConnected(web3State.account)}
             onClick={() =>
               dispatch({ type: "GET_BALANCE", payload: web3State.balance })
             }
@@ -83,7 +97,12 @@ const MetaMaskUsage = ({ state, dispatch }) => {
           id="send-ether"
           type="text"
           className="form-control w-50 mb-3"
-          placeholder="0x000...000"
+          disabled={!isConnected(web3State.account)}
+          placeholder={
+            isConnected(web3State.account)
+              ? "0x000...000"
+              : "Connectez votre métamask"
+          }
           onChange={(event) =>
             dispatch({ type: "CHANGE_ADDRESS", payload: event.target.value })
           }
@@ -96,6 +115,7 @@ const MetaMaskUsage = ({ state, dispatch }) => {
           id="amount"
           type="number"
           className="form-control w-50"
+          disabled={!isConnected(web3State.account)}
           onChange={(event) =>
             dispatch({ type: "SET_AMOUNT", payload: event.target.value })
           }
@@ -104,6 +124,7 @@ const MetaMaskUsage = ({ state, dispatch }) => {
       </div>
       <div className="d-flex">
         <button
+          disabled={!isConnected(web3State.account)}
           onClick={handleClickSendEther}
           className="btn btn-custom1 me-3 align-self-center"
         >

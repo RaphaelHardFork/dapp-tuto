@@ -19,8 +19,6 @@ const SuperbToken = () => {
 
   const handleSendToken = async () => {
     tokenDispatch({ type: "TOKEN_WAITING" })
-    console.log(tokenStatus)
-    console.log(statusStyle)
     try {
       let tx = await token.transfer(address, ethers.utils.parseEther(amount))
       tokenDispatch({ type: "TOKEN_PENDING" })
@@ -33,7 +31,7 @@ const SuperbToken = () => {
   return (
     <div className="mb-3">
       <div className="d-flex align-items-center mb-3">
-        <p className="fs-3 me-4 my-0 p-0">Votre balance : {tokenBalance} SBT</p>
+        <p className="fs-4 me-4 my-0 p-0">Votre balance : {tokenBalance} SBT</p>
         <button onClick={handleTokenUpdate} className="btn btn-custom2">
           Rafraîchir
         </button>
@@ -74,6 +72,19 @@ const SuperbToken = () => {
           Envoyer
         </button>
       </div>
+      <div className="d-flex mb-3">
+        <label htmlFor="address-approve" className="form-label">
+          Approuver une adresse :
+        </label>
+        <input
+          id="address-approve"
+          type="text"
+          className="form-control me-3"
+          placeholder="0x000...000"
+        />
+        <button className="btn btn-custom1">Approuver</button>
+      </div>
+
       {tokenStatus && <div className={statusStyle}>{tokenStatus}</div>}
     </div>
   )

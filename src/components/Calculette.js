@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import { Web3Context } from "web3-hooks"
 import { useSeveralContracts } from "../hooks/useSeveralContracts"
 
@@ -7,8 +7,17 @@ const Calculette = () => {
   const [web3State] = useContext(Web3Context)
   const [, , , token, , , calculette, calcState, calcDispatch] =
     useSeveralContracts()
-  const { number1, number2, operator, amount, creditBalance, approved, rate } =
-    calcState
+
+  const {
+    number1,
+    number2,
+    operator,
+    amount,
+    creditBalance,
+    approved,
+    rate,
+    buyStatus,
+  } = calcState
 
   const displayOp = "+-x/%".split("")
 
@@ -22,22 +31,24 @@ const Calculette = () => {
   }
 
   const handleApproveCalc = async () => {
-    console.log(approved)
     try {
       let tx = await token.approve(
         calculette.address,
-        ethers.utils.parseEther("1000")
+        ethers.utils.parseEther("100000000")
       )
     } catch (e) {}
   }
 
   const handleBuyCredit = async () => {
+    calcDispatch({ type: "BUY_WAINTING" })
     try {
-      let tx = await calculette.buyCredits(10)
-
+      calcDispatch({ type: "BUY_PENDING" })
+      let tx = await calculette.buyCredits(100)
       await tx.wait()
+      calcDispatch({ type: "BUY_SUCCESS" })
     } catch (e) {
       console.log(e)
+      calcDispatch({ type: "BUY_FAILURE", payload: e })
     }
   }
 
@@ -61,16 +72,25 @@ const Calculette = () => {
 
   return (
     <div className="">
+      <p className="fs-5">{!!calculette && calculette.address}</p>
       {approved ? (
-        <div className="mb-3 d-flex w-50 align-items-center">
-          <label htmlFor="buy-credits" className="form-label my-0">
-            1 SBT = 8 crédits
-          </label>
-          <input type="number" className="form-control" />
-          <button onClick={handleBuyCredit} className="btn btn-custom2">
-            Acheter des crédits
-          </button>
-        </div>
+        <>
+          <div className="mb-3 d-flex w-50 align-items-center">
+            <label htmlFor="buy-credits" className="form-label my-0">
+              1 SBT = 8 crédits
+            </label>
+            <input type="number" className="form-control me-3" />
+            <button
+              onClick={handleBuyCredit}
+              className="btn btn-custom2 d-inline-block h-25 me-3"
+            >
+              Acheter des crédits
+            </button>
+          </div>
+          {buyStatus && (
+            <div className="alert alert-light my-0">{buyStatus}</div>
+          )}
+        </>
       ) : (
         <button onClick={handleApproveCalc} className="btn btn-custom3">
           Approver le contrat pour acheter des crédits

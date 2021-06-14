@@ -46,6 +46,7 @@ export const useSeveralContracts = () => {
     amount: 0,
     approved: false,
     rate: 8,
+    buyStatus: "",
   })
 
   if (counter === undefined || token === undefined) {

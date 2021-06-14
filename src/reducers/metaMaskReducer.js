@@ -4,6 +4,7 @@ export const metaMaskReducer = (state, action) => {
       return {
         ...state,
         ethBalance: action.payload,
+        txStatus: "",
       }
     case "GET_BALANCE_FAILURE":
       return {
