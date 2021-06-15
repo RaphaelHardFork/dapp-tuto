@@ -1,14 +1,24 @@
+// libs
+import { ethers } from "ethers"
+
+// react & custom hooks
 import { useContext, useReducer, useEffect, useState } from "react"
 import { Web3Context } from "web3-hooks"
+import { useSeveralContracts } from "./hooks/useSeveralContracts"
+
+// reducers
 import { metaMaskReducer } from "./reducers/metaMaskReducer"
+
+// components
 import Counter from "./components/Counter"
 import MetaMaskUsage from "./components/MetaMaskUsage"
 import Calculette from "./components/Calculette"
 import Header from "./components/Header"
 import SuperbToken from "./components/SuperbToken"
-import { useSeveralContracts } from "./hooks/useSeveralContracts"
-import { ethers } from "ethers"
 import Modal from "./components/Modal"
+
+// chakra components
+import { Box, Container, Heading } from "@chakra-ui/react"
 
 const Dapp = () => {
   const [web3State] = useContext(Web3Context)
@@ -21,7 +31,7 @@ const Dapp = () => {
     address: "",
     amount: 0,
     txStatus: "",
-    txStatusStyle: "alert alert-light",
+    txStatusStyle: "info",
     errorMessage: "",
   })
 
@@ -40,7 +50,7 @@ const Dapp = () => {
   return (
     <>
       <Modal modal={modal} setModal={setModal} />
-      <div className="App bg-custom min-vh-100">
+      <Box bgGradient="linear(45deg,#FFFFFF,#fddfc9)" minHeight="100vh">
         <Header setModal={setModal} isConnected={isConnected} />
 
         {/* MESSAGE D'INSTALLATION DE METAMASK */}
@@ -59,16 +69,22 @@ const Dapp = () => {
         </div>
 
         {/* UTILISATION DE METAMASK */}
-        <div className="container">
-          <h2 className="display-5 text-center text-lg-start">
+        <Container mt="2rem" maxW="90%">
+          <Heading
+            textAlign={{ base: "center", xl: "start" }}
+            as="h2"
+            fontSize="3rem"
+            fontWeight="light"
+            fontFamily="sans-serif"
+          >
             Utilisation de MetaMask
-          </h2>
+          </Heading>
           <MetaMaskUsage
             isConnected={isConnected}
             state={state}
             dispatch={dispatch}
           />
-        </div>
+        </Container>
 
         {/* UTILISATION D'UN SMART CONTRACT */}
         <div className="border-top border-dark mt-3">
@@ -126,7 +142,7 @@ const Dapp = () => {
         >
           &#169; Raphael
         </footer>
-      </div>
+      </Box>
     </>
   )
 }

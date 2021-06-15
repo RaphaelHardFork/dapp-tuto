@@ -1,14 +1,14 @@
 import Dapp from "./Dapp"
 import "bootstrap/dist/css/bootstrap.css"
 import "./App.css"
-import CounterContextProvider from "./contexts/ContractsContext"
+import ContractsContextProvider from "./contexts/ContractsContext"
 
 const App = () => {
   return (
     <>
-      <CounterContextProvider>
+      <ContractsContextProvider>
         <Dapp />
-      </CounterContextProvider>
+      </ContractsContextProvider>
     </>
   )
 }

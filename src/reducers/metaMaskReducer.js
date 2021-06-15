@@ -51,19 +51,19 @@ export const metaMaskReducer = (state, action) => {
           case "":
             return ""
           case "Waiting for confirmation":
-            return "alert alert-warning"
+            return "info"
           case "Pending":
-            return "alert alert-warning"
+            return "warning"
           case "Success":
-            return "alert alert-success"
+            return "success"
           case "Failed":
-            return "alert alert-danger"
+            return "error"
           case "Transaction rejected":
-            return "alert alert-danger"
+            return "error"
           case "Insufficient Funds":
-            return "alert alert-danger"
+            return "error"
           default:
-            return "alert alert-dark"
+            return "info"
         }
       }
       if (state.txStatus.startsWith("Failed")) {

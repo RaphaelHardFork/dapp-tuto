@@ -1,6 +1,15 @@
 import { ethers } from "ethers"
 import { useContext } from "react"
 import { Web3Context } from "web3-hooks"
+import {
+  Box,
+  Input,
+  Button,
+  Text,
+  Flex,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react"
 
 const MetaMaskUsage = ({ state, dispatch, isConnected }) => {
   const [web3State] = useContext(Web3Context)
@@ -20,7 +29,7 @@ const MetaMaskUsage = ({ state, dispatch, isConnected }) => {
 
   const handleClickSendEther = async () => {
     //debug
-    console.log(web3State.account)
+    console.log(txStatusStyle)
 
     let etherSend = ethers.utils.parseEther(amount.toString())
     dispatch({ type: "SEND_WAITING" })
@@ -39,91 +48,118 @@ const MetaMaskUsage = ({ state, dispatch, isConnected }) => {
 
   return (
     <>
-      <div className="mb-3">
+      <Box>
         {/* VOIR LES BALANCES */}
-        <label htmlFor="balance-of" className="form-label">
-          Voir la balance de l'adresse :
-        </label>
-        <input
-          id="balance-of"
-          type="text"
-          className="form-control w-50"
-          disabled={!isConnected(web3State.account)}
-          placeholder={
-            isConnected(web3State.account)
-              ? "0x000...000"
-              : "Connectez votre métamask"
-          }
-          onChange={(event) =>
-            dispatch({ type: "CHANGE_ADDRESS", payload: event.target.value })
-          }
-          value={address}
-        />
-        <div className="form-text mb-3">{}</div>
-        <div className="d-flex">
-          <button
+        <Box textAlign={{ base: "center", xl: "start" }} mb="1rem">
+          <Text me="1rem" htmlFor="balance-of" as="label">
+            Voir la balance de l'adresse :
+          </Text>
+          <Input
+            bg="white"
+            disabled={!isConnected(web3State.account)}
+            placeholder={
+              isConnected(web3State.account)
+                ? "0x000...000"
+                : "Connectez votre métamask"
+            }
+            onChange={(event) =>
+              dispatch({ type: "CHANGE_ADDRESS", payload: event.target.value })
+            }
+            value={address}
+            w="25%"
+            id="balance-of"
+          />
+        </Box>
+        <Flex mb="1rem" justifyContent={{ base: "center", xl: "start" }}>
+          <Button
+            _hover={{ backgroundColor: "#ec7133" }}
+            bg="#7d0e00"
+            color="white"
             disabled={!isConnected(web3State.account)}
             onClick={handleClickGetBalance}
-            className="btn btn-custom2 me-3"
+            me="1rem"
           >
             Voir la balance
-          </button>
-          <button
+          </Button>
+          <Button
+            _hover={{ backgroundColor: "#ec7133" }}
+            bg="#7d0e00"
+            color="white"
             disabled={!isConnected(web3State.account)}
             onClick={() =>
               dispatch({ type: "GET_BALANCE", payload: web3State.balance })
             }
-            className="btn btn-custom2 me-3"
+            me="1rem"
           >
             Voir ma balance
-          </button>
-          <div className="fs-5 p-0 my-auto">Balance : {ethBalance} ETH</div>
-        </div>
-      </div>
-      <div className="mb-3">
+          </Button>
+          <Text fontSize="1.25rem" my="auto">
+            Balance : {ethBalance} ETH
+          </Text>
+        </Flex>
+      </Box>
+      <Flex flexDirection="column">
         {/* ENVOYER DES ETHERS */}
-        <label htmlFor="send-ether" className="form-label">
-          Adresse à envoyer de l'ether :
-        </label>
-        <input
-          id="send-ether"
-          type="text"
-          className="form-control w-50 mb-3"
-          disabled={!isConnected(web3State.account)}
-          placeholder={
-            isConnected(web3State.account)
-              ? "0x000...000"
-              : "Connectez votre métamask"
-          }
-          onChange={(event) =>
-            dispatch({ type: "CHANGE_ADDRESS", payload: event.target.value })
-          }
-          value={address}
-        />
-        <label htmlFor="amount" className="form-label">
-          Montant :
-        </label>
-        <input
-          id="amount"
-          type="number"
-          className="form-control w-50"
-          disabled={!isConnected(web3State.account)}
-          onChange={(event) =>
-            dispatch({ type: "SET_AMOUNT", payload: event.target.value })
-          }
-          value={amount}
-        />
-      </div>
-      <div className="d-flex">
-        <button
-          disabled={!isConnected(web3State.account)}
-          onClick={handleClickSendEther}
-          className="btn btn-custom1 me-3 align-self-center"
-        >
-          Envoyer
-        </button>
-        <div className={`fs-5 my-auto ${txStatusStyle} `}>{txStatus}</div>
-      </div>
+        <Box textAlign={{ base: "center", xl: "start" }} mb="1rem">
+          <Text me="1rem" htmlFor="send-ether" as="label">
+            Adresse à envoyer de l'ether :
+          </Text>
+          <Input
+            bg="white"
+            disabled={!isConnected(web3State.account)}
+            placeholder={
+              isConnected(web3State.account)
+                ? "0x000...000"
+                : "Connectez votre métamask"
+            }
+            onChange={(event) =>
+              dispatch({ type: "CHANGE_ADDRESS", payload: event.target.value })
+            }
+            value={address}
+            w="25%"
+            id="send-ether"
+          />
+        </Box>
+        <Box textAlign={{ base: "center", xl: "start" }} mb="1rem">
+          <Text me="1rem" htmlFor="amount" as="label">
+            Montant :
+          </Text>
+          <Input
+            type="number"
+            bg="white"
+            disabled={!isConnected(web3State.account)}
+            placeholder={
+              isConnected(web3State.account)
+                ? "0x000...000"
+                : "Connectez votre métamask"
+            }
+            onChange={(event) =>
+              dispatch({ type: "SET_AMOUNT", payload: event.target.value })
+            }
+            value={amount}
+            w="25%"
+            id="amount"
+          />
+        </Box>
+        <Box textAlign={{ base: "center", xl: "start" }}>
+          <Button
+            _hover={{ backgroundColor: "#7d0e00" }}
+            bg="#ec7133"
+            color="white"
+            disabled={!isConnected(web3State.account)}
+            onClick={handleClickSendEther}
+            mb="1rem"
+          >
+            Envoyer
+          </Button>
+          {!!txStatus && (
+            <Alert status={!!txStatusStyle ? txStatusStyle : "info"}>
+              <AlertIcon />
+              {txStatus}
+            </Alert>
+          )}
+        </Box>
+      </Flex>
     </>
   )
 }
