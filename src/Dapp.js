@@ -18,7 +18,7 @@ import SuperbToken from "./components/SuperbToken"
 import Modal from "./components/Modal"
 
 // chakra components
-import { Box, Container, Heading } from "@chakra-ui/react"
+import { Box, Container, Heading, Alert, AlertIcon } from "@chakra-ui/react"
 
 const Dapp = () => {
   const [web3State] = useContext(Web3Context)
@@ -69,41 +69,61 @@ const Dapp = () => {
         </div>
 
         {/* UTILISATION DE METAMASK */}
-        <Container mt="2rem" maxW="90%">
-          <Heading
-            textAlign={{ base: "center", xl: "start" }}
-            as="h2"
-            fontSize="3rem"
-            fontWeight="light"
-            fontFamily="sans-serif"
-          >
-            Utilisation de MetaMask
-          </Heading>
-          <MetaMaskUsage
-            isConnected={isConnected}
-            state={state}
-            dispatch={dispatch}
-          />
-        </Container>
+        <Box p="1rem" borderBottom="1px">
+          <Container mt="1rem" maxW="90%">
+            <Heading
+              textAlign={{ base: "center", xl: "start" }}
+              as="h2"
+              fontSize="3rem"
+              fontWeight="light"
+              fontFamily="sans-serif"
+            >
+              Utilisation de MetaMask
+            </Heading>
+            <MetaMaskUsage
+              isConnected={isConnected}
+              state={state}
+              dispatch={dispatch}
+            />
+          </Container>
+        </Box>
 
         {/* UTILISATION D'UN SMART CONTRACT */}
-        <div className="border-top border-dark mt-3">
-          <div className="container">
-            <h2 className="display-5">Utilisation d'un Smart Contract</h2>
+        <Box p="1rem" borderBottom="1px">
+          <Container mt="1rem" maxW="90%">
+            <Heading
+              textAlign={{ base: "center", xl: "start" }}
+              as="h2"
+              fontSize="3rem"
+              fontWeight="light"
+              fontFamily="sans-serif"
+            >
+              Utilisation d'un Smart Contract
+            </Heading>
 
             {/* COUNTER */}
-            <div className="mb-3">
-              <h3 className="">Counter.sol</h3>
-              {!(web3State.chainId === 4) ? (
-                <p className="alert alert-warning">
-                  Counter s'utilise avec le réseau Rinkeby
-                </p>
-              ) : counter ? (
-                <Counter />
-              ) : (
-                <p className="alert">Le contrat n'est pas initialiser</p>
-              )}
-            </div>
+            <Heading
+              textAlign={{ base: "center", xl: "start" }}
+              as="h3"
+              fontSize="1.5rem"
+              fontWeight="bold"
+              fontFamily="sans-serif"
+            >
+              Counter.sol
+            </Heading>
+            {!(web3State.chainId === 4) ? (
+              <Alert status="warning">
+                <AlertIcon />
+                Counter s'utilise avec le réseau Rinkeby
+              </Alert>
+            ) : counter ? (
+              <Counter />
+            ) : (
+              <Alert status="error">
+                <AlertIcon />
+                Le contrat n'est pas initialiser{" "}
+              </Alert>
+            )}
 
             {/* SUPERBTOKEN */}
             <div className="mb-3">
@@ -132,8 +152,8 @@ const Dapp = () => {
                 <p className="alert">Le contrat n'est pas initialiser</p>
               )}
             </div>
-          </div>
-        </div>
+          </Container>
+        </Box>
 
         {/* EXEMPLE DU COURS */}
         <footer
