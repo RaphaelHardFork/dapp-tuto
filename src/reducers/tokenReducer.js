@@ -33,7 +33,12 @@ export const tokenReducer = (state, action) => {
     case "TOKEN_SUCCESS":
       return {
         ...state,
-        tokenStatus: "Success",
+        tokenStatus: `Success! Transfer ${
+          state.amount
+        } from ${state.sender.slice(0, 7)}... to ${state.recipient.slice(
+          0,
+          7
+        )}...`,
       }
 
     case "TOKEN_FAILURE":
@@ -76,6 +81,13 @@ export const tokenReducer = (state, action) => {
       }
       console.log("useEffect style" + style)
       return { ...state, statusStyle: style }
+    case "DISPLAY_EVENT":
+      return {
+        ...state,
+        sender: action.sender,
+        recipient: action.recipient,
+        amount: action.amount,
+      }
     default:
       throw new Error(
         `tokenIcoReducer: wrong input in the reducer ${action.type}`

@@ -31,6 +31,8 @@ export const useSeveralContracts = () => {
     address: "",
     tokenStatus: "",
     statusStyle: "alert alert-light",
+    sender: "",
+    recipient: "",
   })
 
   useEffect(() => {

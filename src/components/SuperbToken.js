@@ -1,12 +1,23 @@
 import { ethers } from "ethers"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { Web3Context } from "web3-hooks"
 import { useSeveralContracts } from "../hooks/useSeveralContracts"
+import { useToast } from "@chakra-ui/react"
 
 const SuperbToken = () => {
+  const toast = useToast()
+
   const [web3State] = useContext(Web3Context)
   const [, , , token, tokenState, tokenDispatch] = useSeveralContracts()
-  const { tokenBalance, amount, address, tokenStatus, statusStyle } = tokenState
+  const {
+    tokenBalance,
+    amount,
+    address,
+    tokenStatus,
+    statusStyle,
+    sender,
+    recipient,
+  } = tokenState
 
   const handleTokenUpdate = async () => {
     try {
@@ -23,11 +34,39 @@ const SuperbToken = () => {
       let tx = await token.transfer(address, ethers.utils.parseEther(amount))
       tokenDispatch({ type: "TOKEN_PENDING" })
       await tx.wait()
-      tokenDispatch({ type: "TOKEN_SUCCESS" })
+      tokenDispatch({ type: "TOKEN_SUCCESS", sender, recipient, amount })
     } catch (e) {
       tokenDispatch({ type: "TOKEN_FAILURE", payload: e })
     }
   }
+
+  useEffect(() => {
+    if (token) {
+      // param de l'event
+      const cb = (sender, recipient, amount) => {
+        tokenDispatch({ type: "DISPLAY_EVENT", sender, recipient, amount })
+        if (sender.toLowerCase() === web3State.account.toLowerCase()) {
+          toast({
+            title: "Event DataSet",
+            description: `${sender} set storage with value: ${amount}`,
+            status: "info",
+            position: "top-right",
+            duration: 9000,
+            isClosable: true,
+          })
+        }
+      }
+      // ecouter l'event
+      token.on("Transfer", cb)
+      return () => token.off("Transfer", cb)
+    }
+  }, [token, web3State.account, toast, tokenDispatch])
+
+  //DEBUG
+  const debug = () => {
+    toast({})
+  }
+
   return (
     <div className="mb-3">
       <div className="d-flex align-items-center mb-3">
@@ -82,7 +121,9 @@ const SuperbToken = () => {
           className="form-control me-3"
           placeholder="0x000...000"
         />
-        <button className="btn btn-custom1">Approuver</button>
+        <button onClick={debug} className="btn btn-custom1">
+          Console.log
+        </button>
       </div>
 
       {tokenStatus && <div className={statusStyle}>{tokenStatus}</div>}
